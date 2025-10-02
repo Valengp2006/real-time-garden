@@ -2,9 +2,16 @@
 
 ## Descripción
 
-**Real Time Garden** (Jardín Ecológico) es una aplicación interactiva en tiempo real donde múltiples usuarios pueden colaborar para **plantar semillas**, observar cómo crecen y empujarlas para alterar su evolución.  
+🌱 Real Time Garden
 
-Es un experimento de **simulación emergente y colaborativa**, usando **Node.js + Express + Socket.IO** para sincronizar todos los clientes conectados.
+Un jardín interactivo en tiempo real donde los usuarios pueden plantar semillas 🌱 y limpiar el jardín 🧹.
+Además, existe un modo espectador 👀 para ver cómo otros interactúan.
+
+Construido con:
+	•	Node.js
+	•	Express
+	•	Socket.IO
+	•	HTML5 Canvas
 
 ## Objetivos
 
@@ -28,25 +35,37 @@ Es un experimento de **simulación emergente y colaborativa**, usando **Node.js 
 ## Instalación y ejecución
 
 1. Clonar el repositorio:
+
    ```bash
    git clone https://github.com/Valengp2006/real-time-garden.git
    cd real-time-garden
+  ```
 
 	2.	Instalar dependencias:
-
+```bash
 npm install
+```
 
 	3.	Ejecutar el servidor:
-
+```bash
 node server.js
-
+```
 
 	4.	Abrir en navegador:
   
 	•	Plantador: http://localhost:3000/garden.html
 	•	Espectador: http://localhost:3000/spectator.html
 
-### Autora
+## Ideas futuras
+
+- Diferentes tipos de semillas (colores y tamaños).
+- Animaciones de crecimiento 🌳.
+- Usuarios con nombres o avatares.
+- Jardín persistente (guardar estado en una base de datos).
+
+✨ ¡Ahora ya tienes tu propio jardín ecológico interactivo!
+
+## Autora
 
 Proyecto desarrollado por Valentina G.P.
 Curso: Sistemas Físicos Interactivos 1
