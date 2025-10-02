@@ -1,18 +1,27 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>🌱 Real-Time Garden</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #222; color: white; text-align: center; }
+    canvas { border: 2px solid white; background: #004400; display: block; margin: 20px auto; }
+    button { margin: 10px; padding: 10px 20px; font-size: 16px; border-radius: 10px; cursor: pointer; }
+  </style>
 </head>
 <body>
-  <h1>🌱 Jardín en Tiempo Real</h1>
-  <p>Haz clic en la tierra para plantar o presiona la regadera 💧 para regar.</p>
+  <h1>🌱 Jardín Colaborativo en Tiempo Real</h1>
+  <canvas id="garden" width="600" height="400"></canvas>
+  <div>
+    <button id="plantBtn">💧 Plantar</button>
+    <button id="flowerBtn">🌸 Flor</button>
+    <button id="treeBtn">🌳 Árbol</button>
+  </div>
 
-  <canvas id="garden" width="800" height="500"></canvas>
-  <button id="regar">💧 Regar todo</button>
-
+  <!-- Cliente de socket.io -->
   <script src="/socket.io/socket.io.js"></script>
+
+  <!-- Primero garden.js, luego espectador.js -->
   <script src="garden.js"></script>
   <script src="espectador.js"></script>
 </body>
