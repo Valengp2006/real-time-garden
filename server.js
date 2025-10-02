@@ -1,62 +1,60 @@
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const path = require('path');
+// server.js
+const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
 const PORT = process.env.PORT || 3000;
-app.use(express.static(path.join(__dirname, 'public')));
 
+// servir archivos estáticos
+app.use(express.static("public"));
+
+// lista de semillas compartidas
 let seeds = [];
-let nextId = 1;
 
-io.on('connection', (socket) => {
-  console.log('Usuario conectado:', socket.id);
+// lógica de comunicación en tiempo real
+io.on("connection", (socket) => {
+  console.log("✅ Nuevo usuario conectado:", socket.id);
 
-  socket.emit('seedsUpdate', seeds);
+  // enviar las semillas actuales al nuevo usuario
+  socket.emit("updateSeeds", seeds);
 
-  socket.on('plant', (pos) => {
-    const seed = {
-      id: nextId++,
-      x: pos.x, y: pos.y,
-      size: 5 + Math.random() * 8,
-      age: 0,
-      color: { r: Math.random()*255|0, g: Math.random()*255|0, b: Math.random()*255|0 }
-    };
+  // cuando un usuario planta semilla
+  socket.on("plantSeed", (seed) => {
     seeds.push(seed);
-    io.emit('seedsUpdate', seeds);
+    io.emit("updateSeeds", seeds);
   });
 
-  socket.on('nudge', (data) => {
-    const s = seeds.find(se => se.id === data.id);
-    if (s) {
-      s.x += (data.nx - s.x) * 0.25;
-      s.y += (data.ny - s.y) * 0.25;
-      io.emit('seedsUpdate', seeds);
-    }
+  // cuando un usuario empuja (nudge) una semilla
+  socket.on("nudgeSeed", (point) => {
+    seeds = seeds.map((seed) => {
+      const dx = seed.x - point.x;
+      const dy = seed.y - point.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < 50) { // rango de influencia
+        return {
+          ...seed,
+          x: seed.x + dx * 0.1,
+          y: seed.y + dy * 0.1,
+          color: `hsl(${Math.random() * 360}, 80%, 50%)`
+        };
+      }
+      return seed;
+    });
+
+    io.emit("updateSeeds", seeds);
   });
 
-  socket.on('clearGarden', () => {
-    seeds = [];
-    io.emit('seedsUpdate', seeds);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('Usuario desconectado:', socket.id);
+  // cuando un usuario se desconecta
+  socket.on("disconnect", () => {
+    console.log("Usuario desconectado:", socket.id);
   });
 });
 
-setInterval(() => {
-  seeds.forEach(s => {
-    s.age++;
-    if (s.size < 40) s.size += 0.2;
-  });
-  io.emit('seedsUpdate', seeds);
-}, 1000);
-
 server.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`🌱 Server running on http://localhost:${PORT}`);
 });
