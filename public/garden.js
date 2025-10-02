@@ -1,62 +1,50 @@
-// Nos conectamos al servidor socket.io
 const socket = io();
 
-// Obtenemos el canvas y su contexto
-const canvas = document.getElementById("garden");
+// Obtener canvas y contexto
+const canvas = document.getElementById("gardenCanvas");
 const ctx = canvas.getContext("2d");
 
-// Ajustamos el tamaño del canvas
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// Lista de plantas locales
+let plants = [];
 
-// Guardamos las semillas plantadas
-let seeds = [];
-
-// Función para dibujar una semilla
-function drawSeed(x, y) {
-  ctx.beginPath();
-  ctx.arc(x, y, 8, 0, Math.PI * 2);
+// Dibujar planta (círculo verde)
+function drawPlant(x, y) {
   ctx.fillStyle = "limegreen";
+  ctx.beginPath();
+  ctx.arc(x, y, 10, 0, Math.PI * 2);
   ctx.fill();
-  ctx.stroke();
 }
 
-// Función para limpiar el jardín
-function clearGarden() {
+// Redibujar todas las plantas
+function redraw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  seeds = [];
+  for (let p of plants) {
+    drawPlant(p.x, p.y);
+  }
 }
 
-// Evento: click para plantar semilla
+// Evento click para plantar
 canvas.addEventListener("click", (e) => {
-  const x = e.clientX;
-  const y = e.clientY;
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
 
-  // Dibujar en este cliente
-  drawSeed(x, y);
-
-  // Guardar semilla localmente
-  seeds.push({ x, y });
-
-  // Enviar al servidor
+  // Emitir evento al servidor
   socket.emit("plant", { x, y });
 });
 
 // Botón para limpiar el jardín
 document.getElementById("clearBtn").addEventListener("click", () => {
-  clearGarden();
   socket.emit("clear");
 });
 
-// --- Eventos de socket.io ---
-
-// Cuando alguien planta, todos lo ven
+// Escuchar eventos desde el servidor
 socket.on("plant", (data) => {
-  drawSeed(data.x, data.y);
-  seeds.push(data);
+  plants.push(data);
+  redraw();
 });
 
-// Cuando alguien limpia el jardín
 socket.on("clear", () => {
-  clearGarden();
+  plants = [];
+  redraw();
 });
