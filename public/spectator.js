@@ -1,26 +1,34 @@
-// espectador.js
 const socket = io();
-console.log("✅ espectador.js cargado correctamente");
 
-// Recibir eventos del servidor
-socket.on("new-plant", (data) => {
-  console.log("🌱 Nueva planta recibida:", data);
-  window.garden.addPlant(data.type, data.x, data.y);
+// Obtener canvas
+const canvas = document.getElementById("spectatorCanvas");
+const ctx = canvas.getContext("2d");
+
+let plants = [];
+
+// Dibujar planta
+function drawPlant(x, y) {
+  ctx.fillStyle = "limegreen";
+  ctx.beginPath();
+  ctx.arc(x, y, 10, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+// Redibujar todo
+function redraw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let p of plants) {
+    drawPlant(p.x, p.y);
+  }
+}
+
+// Escuchar eventos del servidor
+socket.on("plant", (data) => {
+  plants.push(data);
+  redraw();
 });
 
-// Conectar botones
-document.getElementById("plantBtn").addEventListener("click", () => {
-  socket.emit("plant", { type: "plant", x: randX(), y: randY() });
+socket.on("clear", () => {
+  plants = [];
+  redraw();
 });
-
-document.getElementById("flowerBtn").addEventListener("click", () => {
-  socket.emit("plant", { type: "flower", x: randX(), y: randY() });
-});
-
-document.getElementById("treeBtn").addEventListener("click", () => {
-  socket.emit("plant", { type: "tree", x: randX(), y: randY() });
-});
-
-// Helpers
-function randX() { return Math.random() * 600; }
-function randY() { return Math.random() * 400; }

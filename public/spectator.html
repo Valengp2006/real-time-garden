@@ -1,59 +1,27 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <title>Jardín Ecológico — Espectador</title>
+  <meta charset="UTF-8">
+  <title>Espectador - Real Time Garden</title>
   <style>
-    html,body { height:100%; margin:0; background:#05050a; color:#ddd; font-family:Arial; }
-    canvas { display:block; margin:0 auto; background: radial-gradient(#051228, #021018); }
-    #info { position:fixed; right:10px; top:10px; background:rgba(0,0,0,0.45); padding:8px; border-radius:6px; }
+    body {
+      margin: 0;
+      background: #2d2d2d;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    canvas {
+      border: 2px solid white;
+      background: #1a472a;
+    }
   </style>
 </head>
 <body>
-  <div id="info">Modo Espectador — solo observas</div>
-  <canvas id="c2"></canvas>
+  <canvas id="spectatorCanvas" width="800" height="600"></canvas>
+
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-    const canvas = document.getElementById('c2');
-    const ctx = canvas.getContext('2d');
-    function resize() { canvas.width = Math.min(window.innerWidth, 1200); canvas.height = Math.min(window.innerHeight, 800); }
-    window.addEventListener('resize', resize);
-    resize();
-
-    let seeds = [];
-    socket.on('seedsUpdate', (data) => { seeds = data; });
-
-    function draw() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle = '#021018'; ctx.fillRect(0,0,canvas.width,canvas.height);
-
-      for (let i=0;i<seeds.length;i++){
-        for (let j=i+1;j<seeds.length;j++){
-          const a = seeds[i], b = seeds[j];
-          const dx = a.x - b.x, dy = a.y - b.y;
-          const d = Math.sqrt(dx*dx + dy*dy);
-          if (d < 220) {
-            ctx.strokeStyle = `rgba(${(a.color.r+b.color.r)/2|0}, ${(a.color.g+b.color.g)/2|0}, ${(a.color.b+b.color.b)/2|0}, ${1 - d/220})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
-          }
-        }
-      }
-
-      seeds.forEach(s => {
-        const x = Math.max(0, Math.min(canvas.width, s.x));
-        const y = Math.max(0, Math.min(canvas.height, s.y));
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(${s.color.r},${s.color.g},${s.color.b},1)`;
-        ctx.arc(x,y, s.size, 0, Math.PI*2); ctx.fill();
-      });
-
-      ctx.fillStyle = '#ddd'; ctx.font = '12px Arial';
-      ctx.fillText(`Semillas: ${seeds.length}`, 12, canvas.height - 10);
-      requestAnimationFrame(draw);
-    }
-    draw();
-  </script>
+  <script src="spectator.js"></script>
 </body>
 </html>
