@@ -29,11 +29,11 @@ canvas.addEventListener("click", (e) => {
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
 
-  // Emitir evento al servidor
+  // Enviar planta al servidor
   socket.emit("plant", { x, y });
 });
 
-// Botón para limpiar el jardín
+// Botón limpiar
 document.getElementById("clearBtn").addEventListener("click", () => {
   socket.emit("clear");
 });

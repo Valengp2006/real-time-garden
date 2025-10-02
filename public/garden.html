@@ -1,34 +1,46 @@
-const socket = io();
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Jardín Ecológico — Garden 🌱</title>
+  <style>
+    body {
+      margin: 0;
+      background: #2d2d2d;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      color: white;
+      font-family: sans-serif;
+    }
+    canvas {
+      border: 2px solid white;
+      background: #1a472a;
+      cursor: crosshair;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .clear {
+      background: crimson;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h2>🌱 Real Time Garden - Plantar Semillas</h2>
+  <canvas id="gardenCanvas" width="800" height="600"></canvas>
+  <button class="clear" id="clearBtn">Limpiar Jardín</button>
 
-// Obtener canvas
-const canvas = document.getElementById("spectatorCanvas");
-const ctx = canvas.getContext("2d");
-
-let plants = [];
-
-// Dibujar planta
-function drawPlant(x, y) {
-  ctx.fillStyle = "limegreen";
-  ctx.beginPath();
-  ctx.arc(x, y, 10, 0, Math.PI * 2);
-  ctx.fill();
-}
-
-// Redibujar todo
-function redraw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  for (let p of plants) {
-    drawPlant(p.x, p.y);
-  }
-}
-
-// Escuchar eventos del servidor
-socket.on("plant", (data) => {
-  plants.push(data);
-  redraw();
-});
-
-socket.on("clear", () => {
-  plants = [];
-  redraw();
-});
+  <!-- Importar socket.io y luego tu script -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="garden.js"></script>
+</body>
+</html>
