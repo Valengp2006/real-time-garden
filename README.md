@@ -25,20 +25,6 @@ Es un experimento de **simulación emergente y colaborativa**, usando **Node.js 
   - **Movimiento** → Puede ser empujada (nudge) y “rebotar” en los bordes.
 - Todos los cambios se sincronizan con todos los usuarios conectados.
 
-## Boceto (ASCII)
-
-+———————————————–+
-|   Jardín Ecológico                             |
-|                                               |
-|   [canvas]                                     |
-|   - Clic: plantar semilla                      |
-|   - Mantener clic: empujar semilla (nudge)     |
-|                                               |
-|   Leyenda:                                     |
-|   • Tamaño = edad                              |
-|   • Color = estado energético                  |
-+———————————————–+
-
 ## Instalación y ejecución
 
 1. Clonar el repositorio:
