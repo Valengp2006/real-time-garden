@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>🌱 Real-Time Garden</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>🌱 Jardín en Tiempo Real</h1>
+  <p>Haz clic en la tierra para plantar o presiona la regadera 💧 para regar.</p>
+
+  <canvas id="garden" width="800" height="500"></canvas>
+  <button id="regar">💧 Regar todo</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="garden.js"></script>
+  <script src="espectador.js"></script>
+</body>
+</html>

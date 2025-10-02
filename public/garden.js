@@ -1,43 +1,38 @@
-const socket = io();
-const canvas = document.getElementById("gardenCanvas");
+const canvas = document.getElementById("garden");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+let plants = [];
 
-let seeds = [];
-
-// escuchar semillas desde el servidor
-socket.on("updateSeeds", (serverSeeds) => {
-  seeds = serverSeeds;
-  drawGarden();
-});
-
-// plantar semilla al hacer clic
-canvas.addEventListener("click", (e) => {
-  const seed = {
-    x: e.clientX,
-    y: e.clientY,
-    size: 5,
-    color: `hsl(${Math.random() * 360}, 80%, 50%)`,
-  };
-  socket.emit("plantSeed", seed);
-});
-
-// empujar semilla al arrastrar
-canvas.addEventListener("mousemove", (e) => {
-  if (e.buttons === 1) {
-    socket.emit("nudgeSeed", { x: e.clientX, y: e.clientY });
-  }
-});
-
-// dibujar todas las semillas
+// Dibujar todas las plantas
 function drawGarden() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  seeds.forEach((seed) => {
+  plants.forEach((plant) => {
     ctx.beginPath();
-    ctx.arc(seed.x, seed.y, seed.size, 0, Math.PI * 2);
-    ctx.fillStyle = seed.color;
+    ctx.arc(plant.x, plant.y, plant.size, 0, Math.PI * 2);
+    ctx.fillStyle = plant.color;
     ctx.fill();
   });
 }
+
+// Agregar nueva planta
+function addPlant(x, y) {
+  const plant = {
+    x,
+    y,
+    size: 10,
+    color: "green",
+  };
+  plants.push(plant);
+  drawGarden();
+}
+
+// Hacer crecer todas las plantas (regar)
+function waterPlants() {
+  plants.forEach((plant) => {
+    plant.size += 3;
+    plant.color = "limegreen";
+  });
+  drawGarden();
+}
+
+window.garden = { addPlant, waterPlants, drawGarden };
